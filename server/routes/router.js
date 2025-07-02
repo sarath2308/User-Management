@@ -1,12 +1,12 @@
 import express from 'express'
-import userController from '../controllers/userController'
+import userController from '../controllers/userController.js'
 
 
 const router=express.Router();
 
 
-router.get('/',userController.signup)
-
+router.post('/api/auth/signup',userController.signup)
+router.post('/api/auth/signin',userController.login)
 
 
 
