@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema({
   profileImage: {
     type: String,
     default: '' // or a default avatar URL if needed
+  },
+  isAdmin:{
+    type:Boolean,
+    default:false,
+  },
+  isDeleted:{
+    type:Boolean,
+    default:false,
   }
 }, {
   timestamps: true // adds createdAt and updatedAt fields

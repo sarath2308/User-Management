@@ -3,6 +3,7 @@ import React,{useEffect} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useGetuserQuery } from "../../../api/userApi";
 import Navbar from "../../../Components/Navbar/Navbar";
+
 const UserHome = () => {
   const navigate = useNavigate();
 
@@ -10,24 +11,27 @@ const {data,isSuccess,isLoading,isError}=useGetuserQuery()
 
  const user=data;
 
-  const handleLogout = () => {
-    navigate("/");
-  };
-
-  useEffect(() => {
-  if (isError) {
+ useEffect(() => {
+  if (!isLoading && (isError || !data)) {
     navigate('/');
   }
-}, [isError, navigate]);
+}, [isError, isLoading, data, navigate]);
+
 
 if(isLoading)
 {
     return <div>Loading...</div>
 }
+
+
+if (isError || !data) {
+  return <div className="text-red-500">Unauthorized. Please login again.</div>;
+}
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0d0d23] to-[#221c2f] text-white">
    
-  <Navbar handleLogout={handleLogout} />
+  <Navbar  />
     
       <div className="max-w-7xl mx-auto py-10 px-4">
     

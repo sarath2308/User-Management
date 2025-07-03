@@ -20,7 +20,13 @@ export const userApi=createApi({
         body: formData,
       }),
     }),
+    logout:builder.mutation({
+      query:()=>({
+        url:'/logout',
+        method:'POST',
+      })
+    })
   })
 })
 
-export const {useGetuserQuery,useUploadImageMutation}=userApi;
+export const {useGetuserQuery,useUploadImageMutation,useLogoutMutation}=userApi;

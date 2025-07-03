@@ -105,18 +105,21 @@ const uploadImage=async(req,res)=>
   }
 }
 
-const logout=async(req,res)=>
-{
-  try {
-    
-  } catch (error) {
-    
-  }
-}
+ const logout = (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: false, 
+    sameSite: 'strict',
+  });
+
+  res.status(200).json({ message: 'Logged out successfully' });
+};
+
 
 export default{
     signup,
     login,
     getUser,
-    uploadImage
+    uploadImage,
+    logout
 }

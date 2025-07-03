@@ -1,6 +1,28 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-const Navbar = ({handleLogout}) => {
+import { useLogoutMutation } from '../../api/userApi';
+import { useNavigate } from 'react-router-dom';
+
+
+const Navbar = () => {
+const navigate=useNavigate()
+
+const [logout]=useLogoutMutation();
+const handleLogout = async() => {
+    try{
+   const result=await logout()
+   if(result?.data)
+   {
+       navigate("/");
+   }
+}catch(error)
+{
+    console.log(error);
+    
+}
+   
+  };
+
   return (
     <>
         <nav className="bg-opacity-10 backdrop-blur-md shadow-lg p-4 sticky top-0 z-10">

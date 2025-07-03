@@ -4,6 +4,7 @@ import UserLogin from './Pages/User/Login/UserLogin'
 import store from './store/store'
 import { Provider } from 'react-redux'
 import { Route,Routes } from 'react-router-dom'
+import AdminLogin from './Pages/Admin/Login/AdminLogin'
 const UserHomeLazy=React.lazy(()=> import('./Pages/User/Home/UserHome'))
 const UserProfileLazy=React.lazy(()=>import('./Pages/User/Profile/Profile'))
 function App() {
@@ -18,7 +19,7 @@ function App() {
         <Route path="/home" element={<UserHomeLazy />}>
         </Route>
           <Route path="/home/profile" element={<UserProfileLazy />} /> 
-        
+          <Route path='/admin' element={<AdminLogin />} />
           </Routes>
           </Suspense>
                 

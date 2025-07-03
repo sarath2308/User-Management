@@ -10,6 +10,7 @@ router.post('/api/user/auth/signin',userController.login)
 router.post('/api/user/upload-profile', verifyToken, upload.single('profileImage'),userController.uploadImage)
 
 router.get('/api/user/userData',verifyToken,userController.getUser)
+router.post('/api/user/logout',verifyToken,userController.logout)
 
 
 
