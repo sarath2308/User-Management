@@ -1,8 +1,10 @@
 
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import { useSigninMutation, useSignupMutation } from "../../../api/authApi.js";
 const UserLogin = () => {
-
+const [signup,{data,isLoading,isSuccess,isError}]=useSignupMutation()
+const [signin]=useSigninMutation();
 const [signStatus,setSignStatus]=useState('SignUp')
 const [email,setEmail]=useState('');
 const [name,setName]=useState('')
@@ -10,8 +12,21 @@ const [password,setPassword]=useState('')
 const [nameError,setNameError]=useState('')
 const [emailError,setEmailError]=useState('')
 const [passwordError,setPasswordError]=useState("")
-const handleSignUp=()=>
+const navigate=useNavigate()
+
+
+const resetForm = () => {
+  setName('');
+  setEmail('');
+  setPassword('');
+  setNameError('');
+  setEmailError('');
+  setPasswordError('');
+};
+
+const handleSignUp=async()=>
 {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     let check=true;
  const tname=name.trim()
@@ -27,6 +42,11 @@ const handleSignUp=()=>
   setEmailError('Email required')
   check=false;
  }
+ if(!emailRegex.test(temail))
+ {
+  check=false;
+  setEmailError('Enter a valid Email')
+ }
  if(tpassword==='')
  {
   setPasswordError('Password required')
@@ -34,16 +54,88 @@ const handleSignUp=()=>
  }
  if(!regex.test(password))
  {
-  setPasswordError('choose a string Password ex.Example@123')
+  setPasswordError('choose a strong Password ex.Example@123')
   check=false;
  }
 
  if(check)
  {
+   try {
+  const result=  await signup({name:tname,email:temail,password:tpassword})
+   console.log(result);
+   
 
+  if(result?.data)
+  {
+    navigate('/home')
+  }
+  
+   } catch (error) {
+    console.log(error);
+    
+   }
  }
 
 }
+
+const handleSignIn=async()=>
+{
+  let check=true;
+   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+   const temail=email.trim()
+ const tpassword=password.trim()
+
+ if(temail==='')
+ {
+  setEmailError('Email required')
+  check=false;
+ }
+ if(!emailRegex.test(temail))
+ {
+  check=false;
+  setEmailError('Enter a valid Email')
+ }
+ if(tpassword==='')
+ {
+  setPasswordError('Password required')
+  check=false;
+ }
+
+if(check)
+{
+  try
+  {
+  const result=await signin({email:temail,password:tpassword})
+
+  if(result?.data)
+  {
+    navigate('/home')
+  }
+}catch(error)
+{
+  console.log(error);
+  
+}
+}
+
+}
+
+
+
+
+const handleStatus=()=>
+{
+  resetForm()
+  if(signStatus==='SignUp')
+  {
+    setSignStatus('SignIn')
+  }
+  else{
+    setSignStatus('SignUp')
+  }
+}
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0d0d23] to-[#221c2f]">
       <div className="w-full max-w-md bg-opacity-10  backdrop-blur-md px-8 py-10 rounded-xl flex flex-col items-center shadow-lg">
@@ -57,8 +149,12 @@ const handleSignUp=()=>
           type="text"
           placeholder="Name"
           value={name}
-          onChange={(e)=>setName(e.target.value)}
-          className="w-full mb-6 px-4 py-2 h-12  rounded-full bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          onChange={(e)=>{
+            setName(e.target.value)
+            if(nameError) setNameError('')
+          }
+          }
+          className="w-full mb-2 px-4 py-2 h-12  rounded-full bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         :''}
         {signStatus==='SignUp'&&nameError?<p className="text-red-600">
@@ -70,8 +166,13 @@ const handleSignUp=()=>
           type="email"
           placeholder="Email"
           value={email}
-          onChange={(e)=>setEmail(e.target.value)}
-          className="w-full mb-6 px-4 py-2 h-12  rounded-full bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          onChange={(e)=>
+          {
+            setEmail(e.target.value)
+            if(emailError) setEmailError('')
+          }
+          }
+          className="w-full mb-2 px-4 py-2 h-12  rounded-full bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
       {emailError && <p className="text-red-600">
         {emailError}</p>}
@@ -80,23 +181,30 @@ const handleSignUp=()=>
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e)=>setPassword(e.target.value)}
-          className="w-full mb-6 h-12 px-4 py-2 rounded-full bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          onChange={(e)=>
+          {
+            setPassword(e.target.value)
+            if(passwordError)setPasswordError('')
+          }
+          }
+          className="w-full mb-2 h-12 px-4 py-2 rounded-full bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
-     {passwordError && <p className="text-red-600">
-        {passwordError}</p>}
+     {passwordError && <span className="text-red-600">
+        {passwordError}</span>}
        {signStatus==='SignUp'?
-        <button className="w-full py-2 rounded-full bg-pink-500 hover:bg-pink-600 text-white font-semibold transition">
+        <button 
+        onClick={handleSignUp}
+        className="w-full py-2 rounded-full bg-pink-500 hover:bg-pink-600 text-white font-semibold transition">
           SignUp
         </button>:
-          <button className="w-full py-2 rounded-full bg-pink-500 hover:bg-pink-600 text-white font-semibold transition">
+          <button onClick={handleSignIn} className="w-full py-2 rounded-full bg-pink-500 hover:bg-pink-600 text-white font-semibold transition">
            SignIn
         </button>
 }
         {signStatus==='SignUp'?
-        <p onClick={()=>setSignStatus('SignIn')}className="mt-4 text-sm text-gray-400 hover:underline cursor-pointer">
+        <p onClick={()=>handleStatus()}className="mt-4 text-sm text-gray-400 hover:underline cursor-pointer">
         Already have an Account? SignIn
-        </p>:<p onClick={()=>setSignStatus('SignUp')} className="mt-4 text-sm text-gray-400 hover:underline cursor-pointer">
+        </p>:<p onClick={()=>handleStatus()} className="mt-4 text-sm text-gray-400 hover:underline cursor-pointer">
       Don't have an Account? SignUp
         </p>}
       </div>

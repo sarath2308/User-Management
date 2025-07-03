@@ -75,9 +75,48 @@ console.log("inside login");
   }
 };
 
+const getUser=async(req,res)=>
+{
+  try {
+    const userId=req.userId;
+    const userData=await User.findById(userId)
+    if(!userData)
+    {
+      return res.status(403).json({message:"user does not exist"})
+    }
+    else{
+      return res.status(201).json({name:userData.name,email:userData.email,profileImg:userData.profileImage})
+    }
+  } catch (error) {
+    return res.status(500).json({message:'internal server error'})
+  }
+}
 
+const uploadImage=async(req,res)=>
+{
+  try {
+    const user = await User.findById(req.userId);
+    user.profileImage = req.file.path; 
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Upload Error:', error);
+    res.status(500).json({ message: 'Upload failed' });
+  }
+}
+
+const logout=async(req,res)=>
+{
+  try {
+    
+  } catch (error) {
+    
+  }
+}
 
 export default{
     signup,
     login,
+    getUser,
+    uploadImage
 }
