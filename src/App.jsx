@@ -5,6 +5,7 @@ import store from './store/store'
 import { Provider } from 'react-redux'
 import { Route,Routes } from 'react-router-dom'
 import AdminLogin from './Pages/Admin/Login/AdminLogin'
+import Dashboard from './Pages/Admin/Home/Dashboard'
 const UserHomeLazy=React.lazy(()=> import('./Pages/User/Home/UserHome'))
 const UserProfileLazy=React.lazy(()=>import('./Pages/User/Profile/Profile'))
 function App() {
@@ -20,6 +21,7 @@ function App() {
         </Route>
           <Route path="/home/profile" element={<UserProfileLazy />} /> 
           <Route path='/admin' element={<AdminLogin />} />
+          <Route path='/dashboard' element={<Dashboard />}></Route>
           </Routes>
           </Suspense>
                 
