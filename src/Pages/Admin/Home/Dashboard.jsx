@@ -7,6 +7,7 @@ import {
   useEditUserMutation,
   useDeleteUserMutation,
 } from "../../../api/adminDataApi";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ const [userToDelete, setUserToDelete] = useState(null);
     if (!validateForm(newUser)) return;
 
     try {
-      await addUser({
+     const result= await addUser({
         name: newUser.name.trim(),
         email: newUser.email.trim(),
         password: newUser.password.trim(),
@@ -79,6 +80,9 @@ const [userToDelete, setUserToDelete] = useState(null);
       refetch()
       setNewUser({ name: "", email: "", password: "" });
       setShowAddModal(false);
+     
+        toast.success("User Created"); 
+      
     } catch (err) {
       setErrorMessage(err?.data?.message || "Failed to add user");
     }
@@ -97,6 +101,7 @@ const [userToDelete, setUserToDelete] = useState(null);
       }).unwrap();
       refetch()
       setShowEditModal(false);
+       toast.success("User Updated"); 
     } catch (err) {
       setErrorMessage(err?.data?.message || "Failed to edit user");
     }
@@ -301,6 +306,7 @@ const [userToDelete, setUserToDelete] = useState(null);
               refetch()
               setShowDeleteModal(false);
               setUserToDelete(null);
+               toast.success("User Deleted"); 
             } catch (err) {
               setErrorMessage(err?.data?.message || "Failed to delete user");
               setShowDeleteModal(false);

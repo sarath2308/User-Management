@@ -8,6 +8,7 @@ import AdminLogin from './Pages/Admin/Login/AdminLogin'
 import Dashboard from './Pages/Admin/Home/Dashboard'
 const UserHomeLazy=React.lazy(()=> import('./Pages/User/Home/UserHome'))
 const UserProfileLazy=React.lazy(()=>import('./Pages/User/Profile/Profile'))
+import { ToastContainer } from 'react-toastify'
 function App() {
 
   return (
@@ -15,6 +16,7 @@ function App() {
           <div>
             <Provider store={store}>
               <Suspense fallback={<div>Loading...</div>}>
+              
           <Routes>
         <Route path='/' element={<UserLogin />}></Route>
         <Route path="/home" element={<UserHomeLazy />}>
@@ -23,6 +25,16 @@ function App() {
           <Route path='/admin' element={<AdminLogin />} />
           <Route path='/dashboard' element={<Dashboard />}></Route>
           </Routes>
+          <ToastContainer
+          position='top-right'
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme='colored'
+        />
           </Suspense>
                 
             </Provider>

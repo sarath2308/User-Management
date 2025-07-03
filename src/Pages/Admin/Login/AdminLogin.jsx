@@ -45,7 +45,7 @@ const AdminLogin = () => {
         if (result?.data) {
           navigate("/dashboard");
         } else if (result?.error) {
-          alert("Invalid email or password");
+           toast.error("Access denied"); 
         }
       } catch (error) {
         console.error("Login error:", error);

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSigninMutation, useSignupMutation } from "../../../api/authApi.js";
+import { toast } from "react-toastify";
 const UserLogin = () => {
 const [signup,{data,isLoading,isSuccess,isError}]=useSignupMutation()
 const [signin]=useSigninMutation();
@@ -63,15 +64,20 @@ const handleSignUp=async()=>
    try {
   const result=  await signup({name:tname,email:temail,password:tpassword})
    console.log(result);
-   
 
   if(result?.data)
   {
     navigate('/home')
   }
+  if (result?.error) {
+  const message = result.error.data?.message || 'Signup failed';
+  toast.error(message); 
+}
   
    } catch (error) {
-    console.log(error);
+    const errorMessage = error?.data?.message || 'Login failed';
+      toast.error(errorMessage); 
+    console.log("error from signup"+error);
     
    }
  }
@@ -111,8 +117,14 @@ if(check)
   {
     navigate('/home')
   }
+  if (result?.error) {
+  const message = result.error.data?.message || 'Signup failed';
+  toast.error(message); 
+}
 }catch(error)
 {
+  const errorMessage = result.error?.data?.message || 'Login failed';
+      toast.error(errorMessage); 
   console.log(error);
   
 }
